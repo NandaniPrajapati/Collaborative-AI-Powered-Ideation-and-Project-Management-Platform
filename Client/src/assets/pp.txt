@@ -1,0 +1,243 @@
+async function  insert(){
+    await project.create({
+        projectName:'pp',
+        description:'r',
+        createdBy :'nandani3@gmail.com'
+    });
+}
+
+
+-------projects ----------
+ 
+
+
+  <h2 className="text-2xl font-bold mb-4">Projects</h2>
+     
+      <div className="mt-6 space-y-4 w-2">
+        {projects.map((project)=> (
+          <div key={project.id} className="border p-4 rounded flex justify-between">
+            <div>
+              <h3 className="font-bold">{project.projectName}</h3>
+              <p className="text-gray-600">{project.description}</p>
+            </div>
+            <div className="space-x-2">
+              <button
+                className="bg-blue-500 text-white px-3 py-1 rounded"
+                onClick={() => setEditing(project)}
+              >
+                Edit
+              </button>
+              <button
+                className="bg-red-500 text-white px-3 py-1 rounded"
+                onClick={() => removeProject(project.id)}
+              >
+                Delete
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
+
+
+      -----server.js----
+     
+
+  --------
+  project.create(req.body)
+.then(project=>res.json(project))
+.catch(err=res.json(err))
+
+ const [projects, setProjects] = useState([]);
+
+  // Fetch projects when component loads
+  useEffect(() => {
+    axios.get("http://localhost:5000/getprojects")
+      .then((res) => {
+        setProjects(res.data);
+      })
+      .catch((err) => console.error("Error fetching projects:", err));
+  }, []);
+  api key AIzaSyBGaXT-OWCALEnxJlMMqj6vJkirhZjmku8
+
+
+-------------------------
+
+/* this is crud operation
+app.post ( "/createProject",async(req,res)=>{
+    try{
+        const pro= new project(req.body);
+        await pro.save();
+        res.status(201).json(pro);
+    }
+    catch(err) {
+res.status(400).json({message:err.message})
+    }
+
+})
+
+app.get("/getprojects",async (req,res)=>
+{
+    try{
+      const projects = await project.find().populate(['owner','name','email']);
+      res.json(projects);
+     
+    }
+    catch (err){
+        console.error('Error fetching projects:', error);
+      res.status(400).json ({ message:err.message})
+
+    }
+})
+
+
+app.put("/getprojects/:id", async (req, res) => {
+    try {
+      const updatedProject = await project.findByIdAndUpdate(
+        req.params.id,
+        req.body,
+        { new: true } // return updated doc
+      );
+      if (!updatedProject) return res.status(404).json({ error: "Project not found" });
+      const canEdit=project.owner.equal(req.user._id)||['admin','user'].include(req.user.role)
+      if(!canEdit) return res.status(403).json({message:'forbidden access'})
+      project.projectName=req.body.title?? project.title;
+      project.description=req.body.description?? project.description;
+      res.json(updatedProject);
+    } 
+    catch (err) {
+      res.status(500).json({ error: err.message });
+    }
+  });
+  
+  // Delete Project
+  app.delete("/getprojects/:id", async (req, res) => {
+    try {
+      const deletedProject = await project.findByIdAndDelete(req.params.id);
+      if (!deletedProject) return res.status(404).json({ error: "Project not found" });
+      res.json({ message: "Project deleted successfully" });
+    } catch (err) {
+      res.status(500).json({ error: err.message });
+    }
+  });
+*/
+------------------
+
+
+
+  {"projectName":"nn",
+"description": "ss",
+"owner": "68da7491b4f95258f8084a83",
+"members": "3"
+}
+
+{"projectName":"nn",
+"description": "ss",
+"owner": "68dfb3290f8bca4cb385b55f",
+"members": "68dfb3290f8bca4cb385b55f"
+}
+ 
+
+for updated and delete project old code ----------
+// ✅ Update Project
+exports.updateProject = async (req, res) => {
+  try {
+    const project = await Project.findById(req.params.id);
+    if (!project) {
+      return res.status(404).json({ message: "Project not found" });
+    }
+
+    /* check ownership or roles
+    const canEdit =
+      project.owner.equals(req.user._id) ||
+      ["admin", "manager"].includes(req.user.role);
+
+    if (!canEdit) {
+      return res.status(403).json({ message: "Forbidden access" });
+    }
+*/
+    // update fields
+    project.projectName = req.body.title ?? project.title;
+    project.description = req.body.description ?? project.description;
+    project.owner = req.body.owner ?? project.owner;
+    project.members = req.body.members ?? project.members;
+    await project.save();
+
+    res.json(project);
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
+
+// ✅ Delete Project
+exports.deleteProject = async (req, res) => {
+  try {
+    const project = await Project.findById(req.params.id);
+    if (!project) {
+      return res.status(404).json({ message: "Project not found" });
+    }
+
+    const canEdit =
+      project.owner.equals(req.user._id) ||
+      ["admin", "manager"].includes(req.user.role);
+
+    if (!canEdit) {
+      return res.status(403).json({ message: "Forbidden access" });
+    }
+
+    await project.remove();
+    res.status(200).json({ message: "Project deleted successfully" });
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
+
+ <ReactSelect
+  isMulti
+  name="members"
+  options={users.map(user => ({ label: user.name, value: user._id }))}
+  onChange={selected => setForm({ ...form, members: selected.map(s => s.value) })}
+  className="basic-multi-select"
+  classNamePrefix="select"
+/>
+
+ ------for whiteBoardData in server.js -----
+const Io =  new Server(server, {
+  cors: {
+    origin: "http://localhost:5173", 
+    methods: ["GET", "POST"],// Allow all origins for development
+  },
+  pingTimeout:60000,
+  pingInterval:25000
+});
+
+const whiteBoardData = []; // Array to store drawing data
+
+
+Io.on("connection", (socket) => {
+  console.log("New client connected");
+
+  // Send the history to the new clients
+  socket.emit("history", whiteBoardData);
+
+  socket.on("drawing", (data) => {
+    whiteBoardData.push(data); // Add drawing data to the history
+    socket.broadcast.emit("drawing", data);
+  });
+  socket.on('clear',()=>{
+    whiteBoardData=[];
+    Io.emit('clear');
+  })
+  socket.on('disconnect',()=>{
+    console.log("user got disconnected")
+  })
+});
+
+
+server.listen(5001, () => {
+  console.log("Server running on http://localhost:5000");
+});
+
+
+----------for zoom setup in app .jsx--
+  -----for zoom in server.js -----
+

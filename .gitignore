@@ -1,0 +1,47 @@
+# === Node & React Common Ignores ===
+node_modules/
+Client/node_modules/
+Backend/node_modules/
+
+# === Environment files ===
+.env
+.env.local
+.env.*.local
+
+# === Build / dist output ===
+dist/
+build/
+Client/dist/
+Backend/dist/
+
+# === Logs ===
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# === OS & Editor Files ===
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# === Dependency lock files (optional) ===
+package-lock.json
+yarn.lock
+
+# === Coverage / testing ===
+coverage/
+*.lcov
+
+# === Cache files ===
+.cache/
+.temp/
+.tmp/
+.eslintcache
+
+# === Misc ===
+*.pid
+*.seed
+*.pid.lock
